@@ -1,56 +1,28 @@
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Login</title>
-  </head>
-<body>
-  <h1>Login page</h1>
+<h1>Login page</h1>
 
-  <% if(messages.error) { %> 
-      <% messages.error.forEach(error => { %>
-        <div class="flash flash-error">
-          <%= error %> 
-        </div>
-    <% }); %>  
-  <% }; %> 
+<% include .partials/messages %>
 
-  <% if(messages.success) { %> 
-    <% messages.success.forEach(success => { %> 
-      <div class="flash flash-success">
-        <%= success %> 
-      </div>
-    <% }); %> 
-  <% }; %> 
+<form action="/login" method="POST">
 
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username">
+  </div>
 
-  <form action="/login" method="POST">
+  <div>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password">
+  </div>
   
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username">
-    </div>
-  
-    <div>
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password">
-    </div>
-    
-    <button type="submit">Login</button>
-  </form>
-  
-  <p>
-    Don't have an account? <a href="/register">Register</a>.
-  </p>
+  <button type="submit">Login</button>
+</form>
 
-  <script src="messageHandler.js"></script>
-  
+<p>
+  Don't have an account? <a href="/register">Register</a>.
+</p>
 
-</body>
-</html>
+<script src="messageHandler.js"></script>
 
 
 

@@ -3,10 +3,11 @@ import url from 'url';
 import dotenv from 'dotenv';
 
 import express from 'express';
+import ejsLayouts from 'express-ejs-layouts';
 import router from './routes/router.js'
 import session from 'express-session';
 import passport from 'passport';
-import flash from 'express-flash'; 
+import flash from 'connect-flash';
 import passportConfigure from './passport-config.js';
 
 // Učitaj environment varijable
@@ -30,6 +31,7 @@ staticDirs.forEach(dir => {
 
 // Postavke za template engine
 app.set('views', [__dirname + '/views']);
+app.use(ejsLayouts);
 app.set('view engine', 'ejs');
 
 // Body parsing i session middleware

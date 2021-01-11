@@ -1,56 +1,28 @@
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Register</title>
-  </head>
+<h1>Register page</h1>
 
-  <body>
+<% include ./partials/messages %>
+
+<form action="/register" method="POST">
+  <div>
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username">
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password">
+  </div>
   
-    <h1>Register page</h1>
+  <button type="submit" id='btn-register'>Register</button>
+</form>
 
-      <% if(messages.error) { %> 
-          <% messages.error.forEach(error => { %>
-            <div class="flash flash-error">
-              <%= error %> 
-            </div>
-        <% }); %>  
-      <% }; %> 
+<p>
+  Already registered? <a href="/login">Log In</a>.
+</p>
 
-      <% if(messages.success) { %> 
-        <% messages.success.forEach(success => { %> 
-          <div class="flash flash-success">
-            <%= success %> 
-          </div>
-        <% }); %> 
-      <% }; %> 
+<script src="messageHandler.js"></script>
   
-    <form action="/register" method="POST">
-      <div>
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username">
-      </div>
-    
-      <div>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password">
-      </div>
-      
-      <button type="submit" id='btn-register'>Register</button>
-    </form>
-
-    <p>
-      Already registered? <a href="/login">Log In</a>.
-    </p>
-
-    <script src="messageHandler.js"></script>
-      
-    
-  </body>
-</html>
 
 
 
