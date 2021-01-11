@@ -1,0 +1,44 @@
+<% if(typeof errors != 'undefined'){ %> <% errors.forEach(function(error) { %>
+    <div class="flash flash-failure">
+      <%= error.msg %>
+    </div>
+  <% }); %> <% } %>
+
+  <% if(messages.error){%>
+    <div class="flash flash-failure">
+      <%= messages.error %>
+    </div>
+  <% } %> 
+
+
+
+  <% if(messages.error){%>
+    <div class="flash flash-error">
+      <%= messages.error %>
+    </div>
+  <% } %> 
+
+  <% if(messages.success){%>
+    <div class="flash flash-error">
+      <%= messages.success %>
+    </div>
+  <% } %> 
+
+
+  <% if(messages.success) { %>
+    <%= messages.success %>
+  <% } %> 
+
+
+
+  <% if(typeof errors != 'undefined'){ %> <% errors.forEach(function(error) { %>
+    <div class="flash flash-error">
+      <%= error.msg %>
+    </div>
+  <% }); %> <% } %> 
+
+  <% if(typeof errors != 'undefined'){ %> <% errors.forEach(function(error) { %>
+    <div class="flash flash-error">
+      <%= error.msg %>
+    </div>
+  <% }); %> <% } %>
