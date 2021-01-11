@@ -7,7 +7,7 @@ import ejsLayouts from 'express-ejs-layouts';
 import router from './routes/router.js'
 import session from 'express-session';
 import passport from 'passport';
-import flash from 'connect-flash';
+import flash from 'express-flash';
 import passportConfigure from './passport-config.js';
 
 // Učitaj environment varijable
