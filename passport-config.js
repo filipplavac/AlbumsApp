@@ -1,6 +1,6 @@
 import LocalStrategy from 'passport-local';
 import {User} from './database.js';
-import {checkPassword} from './passwordHandler.js';
+import Passworder from './Passworder.js';
 
 function passportConfigure(passport){
 
@@ -15,7 +15,7 @@ function passportConfigure(passport){
                     return done(null, false, {message: 'Wrong username.'});
                 }
 
-                const passwordValid = checkPassword(password, user.hash, user.salt);
+                const passwordValid = Passworder.checkPassword(password, user.hash, user.salt);
 
                 if(passwordValid){
                     return done(null, user);

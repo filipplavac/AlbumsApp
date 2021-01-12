@@ -1,5 +1,5 @@
 import {User} from '../database.js';
-import {generatePassword, checkPassword} from '../passwordHandler.js';
+import Passworder from '../Passworder.js';
 
 
 const Middleware = (function(){
@@ -60,7 +60,7 @@ const Middleware = (function(){
                 User.find()
                 .then(users => {
                     users.forEach(user => {
-                        if(checkPassword(password, user.hash, user.salt)){
+                        if(Passworder.checkPassword(password, user.hash, user.salt)){
                             errors.push('Chosen password is already in use, please try again.')
                         };
                     });
@@ -103,7 +103,6 @@ const Middleware = (function(){
         .catch(err => {
             console.log(`\nAn error has occured while storing user to the database\n\n${err}`);
         });
-        
     };
     
     return {
