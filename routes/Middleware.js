@@ -1,8 +1,8 @@
 import {User} from '../database.js';
-import Passworder from '../Passworder.js';
+import passworder from '../passworder.js';
 
 
-const Middleware = (function(){
+const middleware = (function(){
 
     function checkAuthenticated(req, res, next){
         if(req.isAuthenticated()){
@@ -60,7 +60,7 @@ const Middleware = (function(){
                 User.find()
                 .then(users => {
                     users.forEach(user => {
-                        if(Passworder.checkPassword(password, user.hash, user.salt)){
+                        if(passworder.checkPassword(password, user.hash, user.salt)){
                             errors.push('Chosen password is already in use, please try again.')
                         };
                     });
@@ -85,7 +85,7 @@ const Middleware = (function(){
     };
     
     function saveUserToDatabase(req, res, next){
-        const saltAndHash = generatePassword(req.body.password),
+        const saltAndHash = passworder.generatePassword(req.body.password),
         salt = saltAndHash.salt,
         hash = saltAndHash.hash;
         
@@ -97,7 +97,7 @@ const Middleware = (function(){
         
         newUser.save()
         .then(user => {
-            console.log(`\nUser successfully stored to the database\n\n${user}`);
+            console.log(`\nUser successfully stored to the database`);
             next();
         })
         .catch(err => {
@@ -114,4 +114,4 @@ const Middleware = (function(){
     };
 })();
 
-export default Middleware;
+export default middleware;
