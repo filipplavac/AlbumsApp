@@ -47,7 +47,7 @@ const checkRegistration = (req, res, next) => {
     }
     
     if(errors.length > 0){
-        res.render('register', {message: req.flash('error', errors)});
+        res.render('register', {title: 'Register', message: req.flash('error', errors)});
         console.log(req.session.flash);
     } else {
         // Provjeri postoji li odabrano korisničko ime u bazi podataka
@@ -67,7 +67,7 @@ const checkRegistration = (req, res, next) => {
                 });
                 
                 if(errors.length > 0){
-                    res.render('register', {message: req.flash('error', errors)});
+                    res.render('register', {title: 'Register', message: req.flash('error', errors)});
                 } else {
                     next();
                 };

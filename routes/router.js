@@ -5,15 +5,15 @@ import {checkAuthenticated, checkLoggedIn, checkFieldsFilled, checkRegistration,
 const router  = express.Router();
 
 router.get('/', checkAuthenticated, (req, res) =>{
-    res.render('homepage', {title: 'AlbumsApp', user: req.user});
+    res.render('homepage', {user: req.user});
 })
 
 router.get('/login', checkLoggedIn, (req, res) => {
-    res.render('login', {title:'Login'});
+    res.render('login');
 })
 
 router.get('/register', (req, res) => {
-    res.render('register', {title:'Register'});
+    res.render('register');
 })
 
 router.get('/logout', (req, res) => {
@@ -24,7 +24,7 @@ router.get('/logout', (req, res) => {
 router.post('/login', checkFieldsFilled, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
-    failureFlash:true
+    failureFlash: true
 }));
 
 router.post('/register', checkRegistration, saveUserToDatabase, (req, res) => {
