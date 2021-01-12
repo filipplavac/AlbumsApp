@@ -1,15 +1,15 @@
 <% if(messages.error) { %> 
-  <% messages.error.forEach(error => { %>
-    <div class="flash flash-error">
-      <%= error %> 
-    </div>
-<% }); %>  
+    <% messages.error.forEach(error => { %>
+      <div class="flash flash-error">
+        <%= error %> 
+      </div>
+  <% }); %>  
 <% }; %> 
 
 <% if(messages.success) { %> 
-<% messages.success.forEach(success => { %> 
-  <div class="flash flash-success">
-    <%= success %> 
-  </div>
-<% }); %> 
+  <% messages.success.forEach(success => { %> 
+    <div class="flash flash-success">
+      <%= success %> 
+    </div>
+  <% }); %> 
 <% }; %> 
