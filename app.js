@@ -3,7 +3,7 @@ import url from 'url';
 import dotenv from 'dotenv';
 
 import express from 'express';
-import ejsLayouts from 'express-ejs-layouts';
+import expressLayouts from 'express-ejs-layouts';
 import router from './routes/router.js'
 import session from 'express-session';
 import passport from 'passport';
@@ -24,15 +24,30 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Definiraj static foldere
-const staticDirs = ['public/js'];
+const staticDirs = ['public/js', 'public/js/homepage', 'public/css'];
 staticDirs.forEach(dir => {
     app.use(express.static(path.join(__dirname, dir)));
 });
 
 // Postavke za template engine
 app.set('views', [__dirname + '/views']);
-app.use(ejsLayouts);
+app.use(expressLayouts);
 app.set('view engine', 'ejs');
+
+/* Helper funkcija za dinamičko renderiranje <script></script> tagova u layout.ejs */
+app.locals.renderScriptTags = function(scripts){
+        if(scripts != undefined){
+            let scriptTags = scripts.map(script => {
+                return `<script src="${script}"></script>`;
+                
+            }).join('\n'); 
+    
+            return scriptTags;
+
+        } else {
+            return '';
+        }
+    };
 
 // Body parsing i session middleware
 app.use(express.urlencoded({ extended: true }));

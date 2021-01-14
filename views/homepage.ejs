@@ -2,6 +2,28 @@
   
 <p>Hello <%= user.username %>. Welcome to the homepage! </p>
 
+<div class="container container-main">
+    <header></header>
+
+    <div class="container container-artist">
+        <p class="paragraph paragraph-artist-name"></p>
+        <img id="image-artist">
+        <p class="paragraph paragraph-biography"></p>
+        <ul class="ul top-albums"></ul>
+        <ul class="ul top-tracks"></ul> 
+    </div>
+
+    <div class="container container-user">
+        <p class="paragraph paragraph-favourites"></p>
+        <div class="container container-user-favourites"></div>
+        <iframe id="embedder-yt-player"></iframe>
+    </div>
+
+    <footer></footer>
+</div>
+
+
+
 <a href="/logout">Log Out</a>.
 
 
