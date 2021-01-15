@@ -5,7 +5,7 @@ import middleware from './middleware.js'
 const router  = express.Router();
 
 router.get('/', middleware.checkAuthenticated, (req, res) =>{
-    res.render('homepage', {user: req.user, stylesheet: "homepage.css", scripts: ["homepage.js", "messageHandler.js"]});
+    res.render('homepage', {user: req.user, stylesheet: "homepage.css", scripts: ["homepage.js"]});
 })
 
 router.get('/login', middleware.checkLoggedIn, (req, res) => {

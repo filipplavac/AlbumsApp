@@ -1,6 +1,7 @@
 import path from 'path';
 import url from 'url';
 import dotenv from 'dotenv';
+import fetch from 'node-fetch';
 
 import express from 'express';
 import expressLayouts from 'express-ejs-layouts';
@@ -24,7 +25,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Definiraj static foldere
-const staticDirs = ['public/js', 'public/js/homepage', 'public/css'];
+const staticDirs = ['public/js', 'public/js/homepage', 'public/css', 'public/img'];
 staticDirs.forEach(dir => {
     app.use(express.static(path.join(__dirname, dir)));
 });
@@ -38,7 +39,7 @@ app.set('view engine', 'ejs');
 app.locals.renderScriptTags = function(scripts){
         if(scripts != undefined){
             let scriptTags = scripts.map(script => {
-                return `<script src="${script}"></script>`;
+                return `<script src="${script}" type="module"></script>`;
                 
             }).join('\n'); 
     
@@ -76,4 +77,4 @@ app.listen(PORT, () => {
     console.log(`\nServer is running on port ${PORT}`)
 });
 
-export default __dirname;
+export {fetch, dotenv};

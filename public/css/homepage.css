@@ -1,3 +1,50 @@
 .container {
     border: 1px solid black;
+    padding: 5px;
+}
+
+p {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+/* img {
+    border: 1px solid black;
+} */
+
+ul {
+    border: 1px solid black;
+    list-style-type: none;   
+}
+
+.ul-albums {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: 13px;
+    align-items: center;
+}
+
+li {
+    border: 1px solid black;
+    display: flex;
+}
+
+.container-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.container-artist {
+    display: grid;
+    grid-auto-rows: minmax(100px, auto);
+
+}
+
+.container-user{
+    display: grid;
+    grid-auto-rows: minmax(100px, auto);
+
 }

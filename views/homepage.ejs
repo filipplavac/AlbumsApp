@@ -1,27 +1,54 @@
 
   
-<p>Hello <%= user.username %>. Welcome to the homepage! </p>
+
+<header>
+    <h1>Hello <%= user.username %>. Welcome to the homepage! </>
+</header>
 
 <div class="container container-main">
-    <header></header>
 
     <div class="container container-artist">
-        <p class="paragraph paragraph-artist-name"></p>
+
+        <p class="paragraph-artist-name">
+            Lorem ipsum dolor sit amet.
+        </p>
         <img id="image-artist">
-        <p class="paragraph paragraph-biography"></p>
-        <ul class="ul top-albums"></ul>
-        <ul class="ul top-tracks"></ul> 
+        <p class="paragraph-biography">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores culpa suscipit, excepturi praesentium quas temporibus, voluptatibus quibusdam ipsa reiciendis nemo, ipsum provident quod sapiente architecto ullam? Officiis, officia a? In, minus asperiores! Eaque est facere asperiores deserunt et dolor aut! Minima illo officiis nisi accusantium adipisci nemo. Aliquid, optio impedit deserunt dicta suscipit voluptates numquam ducimus recusandae, officiis eum eius est voluptas nisi tempora cum accusamus fuga, eaque dolorum consectetur sunt? Dolor adipisci corrupti saepe provident pariatur a labore at assumenda et aperiam! Perspiciatis quibusdam non beatae? Voluptates error dolorum laborum minima aliquam optio. Dicta numquam officiis harum nemo cum!
+        </p>
+
+     
+        <ul class="ul-albums">
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>      
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>      
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>      
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>      
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>      
+            <li><img src="mock-album-cover.png" width="100px" height="100px"></li>      
+        </ul> 
+        
+        <ul class="ul-top-tracks">
+            <li class="top-track"></li>
+            <li class="top-track"></li>
+            <li class="top-track"></li>
+            <li class="top-track"></li>
+        </ul> 
+
     </div>
 
     <div class="container container-user">
-        <p class="paragraph paragraph-favourites"></p>
+        <p class="paragraph-favourites"></p>
         <div class="container container-user-favourites"></div>
         <iframe id="embedder-yt-player"></iframe>
     </div>
 
-    <footer></footer>
 </div>
 
+<footer>
+    <h1>AlbumsApp &copy;</h1>
+</footer>
 
 
 <a href="/logout">Log Out</a>.
