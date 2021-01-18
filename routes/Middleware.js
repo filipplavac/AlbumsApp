@@ -1,9 +1,9 @@
 import {User} from '../database.js';
 import passworder from '../passworder.js';
 
-
+// Funkcija middleware napravljena je prema revealing module pattern-u
 const middleware = (function(){
-
+    
     function checkAuthenticated(req, res, next){
         if(req.isAuthenticated()){
             next();
@@ -47,7 +47,7 @@ const middleware = (function(){
         }
         
         if(errors.length > 0){
-            res.render('register', {title: 'Register', message: req.flash('error', errors)});
+            res.render('register', {title: 'Register', message: req.flash('error', errors), stylesheet: 'register.css', scripts: ["register.js", "messageHandler.js"]});
         } else {
             // Provjeri postoji li odabrano korisničko ime u bazi podataka
             User.findOne({username: username})
@@ -66,7 +66,7 @@ const middleware = (function(){
                     });
                     
                     if(errors.length > 0){
-                        res.render('register', {title: 'Register', message: req.flash('error', errors)});
+                        res.render('register', {title: 'Register', message: req.flash('error', errors), stylesheet: 'register.css', scripts: ["register.js", "messageHandler.js"]});
                     } else {
                         next();
                     };
@@ -105,12 +105,48 @@ const middleware = (function(){
         });
     };
     
+    function findTokenInDatabase(req, res, next){
+        
+        const validToken = {
+            accessToken: 'valid mock access token',
+            timeStamp: 1610958569385 
+        };
+
+        const invalidToken = {
+            accessToken: 'invalid mock access token',
+            timeStamp: 1610954619377
+        };
+        
+        req.body.spotifyToken = validToken;
+        console.log('Request body:', req.body);
+        
+        // Provjeri postoji li token u  bazi podataka
+        
+        //  Vrati rezultat u req.body
+        
+        next();
+    }
+    
+    function persistTokenToDatabase(req, res, next){
+        
+        /* Ako token postoji izbriši ga i zamjeni novim tokenom dobivenim u req.body
+        (kada token postoji u db ali je neispravan)  */ 
+        
+        // Ako ne postoji spremi ga u database (kada se token stvara prvi put)
+        
+        // Modificiraj req.body objekt ovisno o tome je li spremanje u db bilo uspješno
+        
+        next();
+    };
+    
     return {
-       checkAuthenticated,
-       checkLoggedIn,
-       checkFieldsFilled,
-       checkRegistration,
-       saveUserToDatabase
+        checkAuthenticated,
+        checkLoggedIn,
+        checkFieldsFilled,
+        checkRegistration,
+        saveUserToDatabase,
+        findTokenInDatabase,
+        persistTokenToDatabase
     };
 })();
 
