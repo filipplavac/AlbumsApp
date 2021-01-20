@@ -7,14 +7,14 @@ const tokenChecker = (function(){
     // Provjera access tokena za Spotify Web API
     async function checkSpotifyToken(){
         
-        // Dohvati Spotify token
+        // Dohvati Spotify token sa servera
         let spotifyToken = await tokenMachine.fetchToken('http://localhost:3000/checkspotifytoken');
         console.log(`Spotify token recieved from server: ${spotifyToken}`);
         
         if(!spotifyToken) {
             
             try {
-                // Napravi token 
+                // Napravi token i zalijepi mu timestamp, spotifyToken = {token: <value>, timestamp: <value>} 
                 spotifyToken = await tokenMachine.createNewToken(base64clientIdAndSecret, authenticationUrl);
 
                 // Spremi token u bazu podataka
