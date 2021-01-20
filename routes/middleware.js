@@ -1,4 +1,4 @@
-import {User} from '../database.js';
+import {User, Token} from '../database.js';
 import passworder from '../passworder.js';
 
 // Funkcija middleware napravljena je prema revealing module pattern-u
@@ -106,37 +106,85 @@ const middleware = (function(){
     };
     
     function findTokenInDatabase(req, res, next){
-        
-        const validToken = {
-            accessToken: 'valid mock access token',
-            timeStamp: 1610958569385 
-        };
 
-        const invalidToken = {
-            accessToken: 'invalid mock access token',
-            timeStamp: 1610954619377
-        };
-        
-        req.body.spotifyToken = validToken;
-        console.log('Request body:', req.body);
-        
-        // Provjeri postoji li token u  bazi podataka
-        
-        //  Vrati rezultat u req.body
-        
-        next();
-    }
+        Token.findOne()
+            .then(token => {
+                req.body.spotifyToken = token;
+                next();
+            })
+            .catch(err => {
+                console.log(`An error has occured while storing the token to the database.\n${err}`);
+                next();
+            });    
+    };
     
     function persistTokenToDatabase(req, res, next){
+
+        const spotifyToken = req.body.spotifyToken;
         
-        /* Ako token postoji izbriši ga i zamjeni novim tokenom dobivenim u req.body
-        (kada token postoji u db ali je neispravan)  */ 
-        
-        // Ako ne postoji spremi ga u database (kada se token stvara prvi put)
-        
-        // Modificiraj req.body objekt ovisno o tome je li spremanje u db bilo uspješno
-        
-        next();
+        // Provjeri postoji li token u bazi podataka (slučaj obnavljanja tokena)
+        Token.findOne()
+            .then(token => {
+                if(!token){
+                    // Izradi token
+                    const newToken = new Token({
+                        apiName: spotifyToken.apiName,
+                        token: spotifyToken.token,
+                        timestamp: spotifyToken.timestamp
+                    });
+
+                    // Spremi token u bazu podataka
+                    newToken.save()
+                        .then(token => {
+                            console.log(`New token successfully stored to the database\n${token}`);
+
+                            // Property putem kojeg zadnji middleware odabire svoj response klijentu
+                            req.body.persistedToDatabase = true;
+
+                            next();
+                        })
+                        .catch(err => {
+                            console.log(`An error has occured while storing the token to the database.\n${err}`);
+                            req.body.persistedToDatabase = false;
+                            next();
+                        });
+
+                } else {
+                    // Izbriši nađeni token iz baze podataka
+                    Token.deleteOne(token)
+                        .then(response => {
+                            console.log(`Expired token successfully deleted from database`);
+
+                            const newToken = new Token({
+                                name: spotifyToken.name,
+                                token: spotifyToken.token,
+                                timestamp: spotifyToken.timestamp
+                            });
+
+                            newToken.save()
+                                .then(token => {
+                                    console.log(`New token successfully stored to the database\n${token}`);
+                                    req.body.persistedToDatabase = true;
+                                    next();
+                                })
+                                .catch(err => {
+                                    console.log(`An error has occured while storing the token to the database.\n${err}`);
+                                    req.body.persistedToDatabase = false;
+                                    next();
+                                });
+
+                        })
+                        .catch(err => {
+                            console.log(`An error has occured while deleting the token from the database.\n${err}`);
+                            req.body.persistedToDatabase = false;
+                            next();
+                        });
+                };
+            })
+            .catch(err => {
+                console.log(`An error has occured while storing the token to the database.\n${err}`);
+                next();
+            }); 
     };
     
     return {

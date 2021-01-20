@@ -7,21 +7,20 @@ const tokenChecker = (function(){
     // Provjera access tokena za Spotify Web API
     async function checkSpotifyToken(){
         
-        // Dohvati Spotify token sa servera
+        // Dohvati Spotify token
         let spotifyToken = await tokenMachine.fetchToken('http://localhost:3000/checkspotifytoken');
-        console.log(`Spotify token recieved from server: ${spotifyToken}`);
         
         if(!spotifyToken) {
             
             try {
-                // Napravi token i zalijepi mu timestamp, spotifyToken = {token: <value>, timestamp: <value>} 
+                // Napravi token 
                 spotifyToken = await tokenMachine.createNewToken(base64clientIdAndSecret, authenticationUrl);
 
                 // Spremi token u bazu podataka
                 const dbResponse = await tokenMachine.saveTokenToDatabase(spotifyToken);
             
                 // Ako je token uspješno pohranjen
-                if(dbResponse.message === 'Success'){
+                if(dbResponse.persistedToDatabase){
                     // Vrati spotifyToken
                     return spotifyToken.token;
                 };   
@@ -33,7 +32,7 @@ const tokenChecker = (function(){
         } else {
 
             // Provjeri ispravnost tokena
-            const valid = await tokenMachine.checkTokenValid(spotifyToken.timeStamp);
+            const valid = await tokenMachine.checkTokenValid(spotifyToken.timestamp);
             
             if(valid){
                 return spotifyToken.token;
@@ -44,7 +43,7 @@ const tokenChecker = (function(){
         
                     const dbResponse = await tokenMachine.saveTokenToDatabase(spotifyToken);
                 
-                    if(dbResponse.message === 'Success'){
+                    if(dbResponse.persistedToDatabase){
                         return spotifyToken.token;
                     };   
         

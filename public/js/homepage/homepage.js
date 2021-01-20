@@ -7,8 +7,6 @@ const artist = new Artist('Red Hot Chilli Peppers');
 
 // Provjera access tokena za Spotify Web API
 (async function loadHomepage(){
-    
-    // Provjeri ispravnost token za pristup API-ju
     const spotifyToken = await tokenChecker.checkSpotifyToken();
     // const youtubeToken = await tokenChecker.checkYoutubeToken();
 
@@ -16,6 +14,7 @@ const artist = new Artist('Red Hot Chilli Peppers');
     (function renderArtistContainer(){
         if(typeof spotifyToken !== 'undefined'){
             console.log('Successfully reached artist container!');
+            console.log(spotifyToken);
         }
             
         // artist.getInfo()
@@ -33,4 +32,6 @@ const artist = new Artist('Red Hot Chilli Peppers');
     // })();
 
 })()
+
+
 

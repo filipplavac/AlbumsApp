@@ -1,12 +1,21 @@
+
 // Funkcija tokenMachine napravljena je prema revealing module pattern-u
 const tokenMachine = (function(){
 
-    // Dohvati Spotify token
+    // Dohvati Spotify token sa https://accounts.spotify.com/api/token
     async function fetchToken(url){
-        const response = await fetch(url);
-        const spotifyToken = await response.json();
+        try{
+            const response = await fetch(url);
+
+            const spotifyToken = await response.json();
+            console.log('Spotify token fetched from database: ', spotifyToken);
+
+            return spotifyToken;
+            
+        } catch(err) {
+            console.log(err);
+        }
       
-        return spotifyToken;
     };
 
     // Stvori novi token
@@ -25,18 +34,20 @@ const tokenMachine = (function(){
  
         try{
             const response = await fetch(authenticationUrl, options);
-            console.log(`Authentication endpoint response code: ${response.status}`);
              
             // Parsiramo response body u json format
             const spotifyResponse = await (response.json());
 
             const token = spotifyResponse.access_token;
 
-            const timeStamp = Date.now();
+            const timestamp = Date.now().toString();
+
+            const apiName = 'Spotify';
 
             const spotifyToken = {
+                apiName,
                 token,
-                timeStamp
+                timestamp
             };
 
             console.log('New access token created and stamped: ', spotifyToken);
@@ -50,8 +61,15 @@ const tokenMachine = (function(){
 
     // Spremi token u bazu podataka
     async function saveTokenToDatabase(spotifyToken){
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({spotifyToken: spotifyToken})
+        };
         
-        const options = {method:'post', body:{spotifyToken: spotifyToken}};
         const response = await fetch('http://localhost:3000/checkspotifytoken', options);
         const dbResponse = await response.json();
     
@@ -59,13 +77,14 @@ const tokenMachine = (function(){
     };
 
     // Provjeri ispravnost tokena
-    async function checkTokenValid(timeStamp){
+    async function checkTokenValid(timestampString){
         
-        if(typeof timeStamp !== 'undefined'){
+        if(typeof timestampString !== 'undefined'){
             const currentTime = Date.now();
-            const diff = currentTime - timeStamp;
+            const timestampInt = Number(timestampString);
+            const diff = currentTime - timestampInt;
             
-            // Provjera je li token stariji od 50 min (3000000 ms)
+            // Provjera je li token stariji od 50 minuta
             if(diff >= 3000000){
                 console.log('Access token is invalid');
                 return false;

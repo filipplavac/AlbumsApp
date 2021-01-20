@@ -17,15 +17,26 @@ const options =  {
     keepAliveInitialDelay:3000
 };
 
-// Struktura svakog user dokumenta
+// Struktura user dokumenta
 const UserSchema = new mongoose.Schema({
     username: String,
     hash: String,
     salt: String
 });
 
+// Struktura Token dokumenta
+const TokenSchema = new mongoose.Schema({
+    apiName: String,
+    token: String,
+    timestamp: String
+});
+
+
 // Definiranje User modela i automatsko stvaranje kolekcije Users
 const User = mongoose.model('User', UserSchema);
+
+// Definiranje Token modela i automatsko stvaranje kolekcije tokens
+const Token = mongoose.model('Token', TokenSchema);
 
 // Uspostavi konekciju s bazom podataka
 mongoose.connect(uri, options)
@@ -42,4 +53,4 @@ mongoose.connection.on('disconnected', (err => {
 }))
 
 // Eksportiraj model
-export {User};
+export {User, Token};
