@@ -39,9 +39,13 @@ router.post('/register', middleware.checkRegistration, middleware.saveUserToData
 });
 
 router.post('/checkspotifytoken', middleware.persistTokenToDatabase, (req, res) => {
-    // Ako req.body sadrži persistetToDb: 'Success'
-    res.send({message: 'Success'});
-
+    // Ako je token uspješno pohranjen u bazu podataka
+    if(req.body.persistedToDatabase){
+        // Property od response objekta putem kojeg tokenChecker zna da je sigurno proslijediti token
+        res.send({persistedToDatabase: true});
+    } else {
+        res.send({persistedToDatabase: false});
+    }
 });
 
 export default router;

@@ -16,6 +16,7 @@ const artist = new Artist('Red Hot Chilli Peppers');
     (function renderArtistContainer(){
         if(typeof spotifyToken !== 'undefined'){
             console.log('Successfully reached artist container!');
+            console.log(spotifyToken);
         }
             
         // artist.getInfo()

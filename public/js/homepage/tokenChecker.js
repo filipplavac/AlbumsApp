@@ -21,7 +21,7 @@ const tokenChecker = (function(){
                 const dbResponse = await tokenMachine.saveTokenToDatabase(spotifyToken);
             
                 // Ako je token uspješno pohranjen
-                if(dbResponse.message === 'Success'){
+                if(dbResponse.persistedToDatabase){
                     // Vrati spotifyToken
                     return spotifyToken.token;
                 };   
@@ -33,7 +33,7 @@ const tokenChecker = (function(){
         } else {
 
             // Provjeri ispravnost tokena
-            const valid = await tokenMachine.checkTokenValid(spotifyToken.timeStamp);
+            const valid = await tokenMachine.checkTokenValid(spotifyToken.timestamp);
             
             if(valid){
                 return spotifyToken.token;
@@ -44,7 +44,7 @@ const tokenChecker = (function(){
         
                     const dbResponse = await tokenMachine.saveTokenToDatabase(spotifyToken);
                 
-                    if(dbResponse.message === 'Success'){
+                    if(dbResponse.persistedToDatabase){
                         return spotifyToken.token;
                     };   
         

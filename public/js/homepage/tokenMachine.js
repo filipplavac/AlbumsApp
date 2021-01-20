@@ -33,11 +33,14 @@ const tokenMachine = (function(){
 
             const token = spotifyResponse.access_token;
 
-            const timeStamp = Date.now();
+            const timestamp = Date.now();
+
+            const name = 'Spotfy token';
 
             const spotifyToken = {
+                name,
                 token,
-                timeStamp
+                timestamp
             };
 
             console.log('New access token created and stamped: ', spotifyToken);
@@ -60,11 +63,11 @@ const tokenMachine = (function(){
     };
 
     // Provjeri ispravnost tokena
-    async function checkTokenValid(timeStamp){
+    async function checkTokenValid(timestamp){
         
-        if(typeof timeStamp !== 'undefined'){
+        if(typeof timestamp !== 'undefined'){
             const currentTime = Date.now();
-            const diff = currentTime - timeStamp;
+            const diff = currentTime - timestamp;
             
             // Provjera je li token stariji od 50 minuta
             if(diff >= 3000000){
