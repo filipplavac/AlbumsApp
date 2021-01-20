@@ -128,7 +128,7 @@ const middleware = (function(){
                 if(!token){
                     // Izradi token
                     const newToken = new Token({
-                        name: spotifyToken.name,
+                        apiName: spotifyToken.apiName,
                         token: spotifyToken.token,
                         timestamp: spotifyToken.timestamp
                     });
@@ -153,6 +153,8 @@ const middleware = (function(){
                     // Izbriši nađeni token iz baze podataka
                     Token.deleteOne(token)
                         .then(response => {
+                            console.log(`Expired token successfully deleted from database`);
+
                             const newToken = new Token({
                                 name: spotifyToken.name,
                                 token: spotifyToken.token,

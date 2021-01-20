@@ -18,8 +18,8 @@ router.get('/register', (req, res) => {
 
 router.get('/checkspotifytoken', middleware.findTokenInDatabase, (req, res) => {
     const spotifyToken = req.body.spotifyToken;
-    console.log('Spotify token found in database: ', spotifyToken);
-    res.send(spotifyToken);
+    console.log('\nSpotify token found in database: ', spotifyToken);
+    res.send(JSON.stringify(spotifyToken));
 });
 
 router.get('/logout', (req, res) => {

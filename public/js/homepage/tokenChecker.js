@@ -9,7 +9,6 @@ const tokenChecker = (function(){
         
         // Dohvati Spotify token
         let spotifyToken = await tokenMachine.fetchToken('http://localhost:3000/checkspotifytoken');
-        console.log(`Spotify token recieved from server: ${spotifyToken}`);
         
         if(!spotifyToken) {
             

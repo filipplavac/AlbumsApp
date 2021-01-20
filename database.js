@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
 // Struktura Token dokumenta
 const TokenSchema = new mongoose.Schema({
     apiName: String,
-    token: Number,
+    token: String,
     timestamp: String
 });
 

@@ -51,7 +51,12 @@ app.locals.renderScriptTags = function(scripts){
     };
 
 // Body parsing i session middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true,
+    type: ['application/json', 'application/x-www-form-urlencoded'] 
+}));
+
 app.use(session({ 
     secret: process.env.SESSION_SECRET, 
     resave: false, 
