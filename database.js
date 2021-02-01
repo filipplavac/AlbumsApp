@@ -47,10 +47,10 @@ mongoose.connect(uri, options)
         console.log(`\nAn error has occured while trying to connect to Atlas cluster.\n${err}`);
     });
 
-// Cluster disconnect listener
+// Disconnect listener
 mongoose.connection.on('disconnected', (err => {
     console.log(`\nDisconnected from Atlas cluster.\n${err}`);
 }))
 
-// Eksportiraj model
+// Eksportiraj modele
 export {User, Token};

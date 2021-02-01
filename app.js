@@ -1,7 +1,6 @@
 import path from 'path';
 import url from 'url';
 import dotenv from 'dotenv';
-import fetch from 'node-fetch';
 
 import express from 'express';
 import expressLayouts from 'express-ejs-layouts';
@@ -81,5 +80,3 @@ app.use(router);
 app.listen(PORT, () => {
     console.log(`\nServer is running on port ${PORT}`)
 });
-
-export {fetch, dotenv};

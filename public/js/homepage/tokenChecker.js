@@ -31,7 +31,7 @@ const tokenChecker = (function(){
             
         } else {
 
-            // Provjeri ispravnost tokena
+            // Provjeri ispravnosti tokena
             const valid = await tokenMachine.checkTokenValid(spotifyToken.timestamp);
             
             if(valid){

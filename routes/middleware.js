@@ -113,7 +113,7 @@ const middleware = (function(){
                 next();
             })
             .catch(err => {
-                console.log(`An error has occured while storing the token to the database.\n${err}`);
+                console.log(`An error has occured while querying the database for a token.\n${err}`);
                 next();
             });    
     };
