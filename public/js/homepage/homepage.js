@@ -1,37 +1,34 @@
 import Artist from './artist.js';
 import tokenChecker from './tokenChecker.js';
-// import ui from './ui.js';
+import UI from './ui.js';
+import events from './events.js';
 
-// Instancijranje Artist objekta prema korisnikovom unosu 
-const artist = new Artist('Red Hot Chilli Peppers');
+// Instanciraj user interface objekt
+const ui = new UI();
 
-// Provjera access tokena za Spotify Web API
+// artistName odgovara imenu koje korisnik upiše u tražilicu
+const artistName = 'Red Hot Chilli Peppers';
+
+// Učitaj naslovnicu
 (async function loadHomepage(){
     const spotifyToken = await tokenChecker.checkSpotifyToken();
     // const youtubeToken = await tokenChecker.checkYoutubeToken();
 
-    // Renderiraj container-artist 
-    (function renderArtistContainer(){
-        if(typeof spotifyToken !== 'undefined'){
-            console.log('Successfully reached artist container!');
-            console.log(spotifyToken);
-        }
-            
-        // artist.getInfo()
-        //     .then(artistInfo => {
-        //         console.log(artistInfo);
-        //         // ui.render(artistInfo);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
-    })();
+    // Instanciraj artist objekt
+    const artist = new Artist(artistName, spotifyToken);
 
-    // (function renderUserContainer(){
+    // Dohvati informacije o artistu
+    const artistInfo = await artist.getInfo();
+    console.log(artistInfo);
 
-    // })();
+    // Renderiraj informacije o artistu na homepageu
+    ui.renderArtist(artistInfo);
 
-})()
+    // Postavi event listener na listu albuma
+    let albumList = document.querySelector('.ul-albums');
+    albumList.addEventListener('click', events.renderTracks);
+
+})();
 
 
 

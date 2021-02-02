@@ -48,3 +48,8 @@ li {
     grid-auto-rows: minmax(100px, auto);
 
 }
+
+.img-album {
+    width: 100px;
+    height: 100px;
+}
