@@ -17,9 +17,9 @@ router.get('/register', (req, res) => {
 })
 
 router.get('/checkspotifytoken', middleware.findTokenInDatabase, (req, res) => {
-    const spotifyToken = req.body.spotifyToken;
-    console.log('\nSpotify token found in database: ', spotifyToken);
-    res.send(JSON.stringify(spotifyToken));
+    const tokenObject = req.body.tokenObject;
+    console.log('\nSpotify token found in database: ', tokenObject);
+    res.send(JSON.stringify(tokenObject));
 });
 
 router.get('/logout', (req, res) => {
@@ -40,11 +40,11 @@ router.post('/register', middleware.checkRegistration, middleware.saveUserToData
 
 router.post('/checkspotifytoken', middleware.persistTokenToDatabase, (req, res) => {
     // Ako je token uspješno pohranjen u bazu podataka
-    if(req.body.persistedToDatabase){
+    if(req.body.isPersistedToDatabase){
         // Property od response objekta putem kojeg tokenChecker zna da je sigurno proslijediti token
-        res.send({persistedToDatabase: true});
+        res.send({isPersistedToDatabase: true});
     } else {
-        res.send({persistedToDatabase: false});
+        res.send({isPersistedToDatabase: false});
     }
 });
 

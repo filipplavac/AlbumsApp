@@ -46,16 +46,6 @@ class UI{
 
             this.albumTracks.appendChild(li);
         });
-
-
-
-
-
-
-
-
-
-
     };
 };
 

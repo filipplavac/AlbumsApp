@@ -7,51 +7,42 @@ const tokenChecker = (function(){
     // Provjera access tokena za Spotify Web API
     async function checkSpotifyToken(){
         
-        // Dohvati Spotify token
-        let spotifyToken = await tokenMachine.fetchToken('http://localhost:3000/checkspotifytoken');
+        // tokenObject = {apiName, token, timestamp}
+        let tokenObject = await tokenMachine.getTokenObject('http://localhost:3000/checkspotifytoken');
         
-        if(!spotifyToken) {
-            
-            try {
-                // Napravi token 
-                spotifyToken = await tokenMachine.createNewToken(base64clientIdAndSecret, authenticationUrl);
-
-                // Spremi token u bazu podataka
-                const dbResponse = await tokenMachine.saveTokenToDatabase(spotifyToken);
-            
-                // Ako je token uspješno pohranjen
-                if(dbResponse.persistedToDatabase){
-                    // Vrati spotifyToken
-                    return spotifyToken.token;
-                };   
-
-            } catch(err) {
-                console.log(err);
-            };
+        if(!tokenObject) {
+            tokenObject = requestNewToken();
+            return tokenObject.token;
             
         } else {
 
-            // Provjeri ispravnosti tokena
-            const valid = await tokenMachine.checkTokenValid(spotifyToken.timestamp);
+            const isValid = await tokenMachine.checkTokenValid(tokenObject.timestamp);
             
-            if(valid){
-                return spotifyToken.token;
+            if(isValid){
+                return tokenObject.token;
                 
             } else {
-                try {
-                    spotifyToken = await tokenMachine.createNewToken(base64clientIdAndSecret, authenticationUrl);
-        
-                    const dbResponse = await tokenMachine.saveTokenToDatabase(spotifyToken);
-                
-                    if(dbResponse.persistedToDatabase){
-                        return spotifyToken.token;
-                    };   
-        
-                } catch(err) {
-                    console.log(err);
-                };
+                tokenObject = requestNewToken();
+                return tokenObject.token;
             };
         };
+    };
+
+    async function requestNewToken(){
+        try {
+            const tokenObject = await tokenMachine.createNewTokenObject(base64clientIdAndSecret, authenticationUrl);
+
+            const status = await tokenMachine.saveTokenObject(tokenObject);
+        
+            // Ako je token uspješno pohranjen
+            if(status.isPersistedToDatabase){
+                return tokenObject;
+            };   
+
+        } catch(err) {
+            console.error(err);
+        };
+
     };
 
     return {

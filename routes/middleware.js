@@ -108,8 +108,8 @@ const middleware = (function(){
     function findTokenInDatabase(req, res, next){
 
         Token.findOne()
-            .then(token => {
-                req.body.spotifyToken = token;
+            .then(tokenObject => {
+                req.body.tokenObject = tokenObject;
                 next();
             })
             .catch(err => {
@@ -119,64 +119,27 @@ const middleware = (function(){
     };
     
     function persistTokenToDatabase(req, res, next){
-
-        const spotifyToken = req.body.spotifyToken;
         
         // Provjeri postoji li token u bazi podataka (slučaj obnavljanja tokena)
         Token.findOne()
-            .then(token => {
-                if(!token){
-                    // Izradi token
-                    const newToken = new Token({
-                        apiName: spotifyToken.apiName,
-                        token: spotifyToken.token,
-                        timestamp: spotifyToken.timestamp
-                    });
-
-                    // Spremi token u bazu podataka
-                    newToken.save()
-                        .then(token => {
-                            console.log(`New token successfully stored to the database\n${token}`);
-
-                            // Property putem kojeg zadnji middleware odabire svoj response klijentu
-                            req.body.persistedToDatabase = true;
-
-                            next();
-                        })
-                        .catch(err => {
-                            console.log(`An error has occured while storing the token to the database.\n${err}`);
-                            req.body.persistedToDatabase = false;
-                            next();
-                        });
+            .then(tokenObject => {
+                if(!tokenObject){
+                    const result = tryToPersist(req.body.tokenObject);
+                    req.body.isPersistedToDatabase = result;
+                    next();
 
                 } else {
                     // Izbriši nađeni token iz baze podataka
-                    Token.deleteOne(token)
+                    Token.deleteOne(req.body.tokenObject)
                         .then(response => {
                             console.log(`Expired token successfully deleted from database`);
-
-                            const newToken = new Token({
-                                name: spotifyToken.name,
-                                token: spotifyToken.token,
-                                timestamp: spotifyToken.timestamp
-                            });
-
-                            newToken.save()
-                                .then(token => {
-                                    console.log(`New token successfully stored to the database\n${token}`);
-                                    req.body.persistedToDatabase = true;
-                                    next();
-                                })
-                                .catch(err => {
-                                    console.log(`An error has occured while storing the token to the database.\n${err}`);
-                                    req.body.persistedToDatabase = false;
-                                    next();
-                                });
-
+                            const result = tryToPersist(req.body.tokenObject);
+                            req.body.isPersistedToDatabase = result;
+                            next();
                         })
                         .catch(err => {
                             console.log(`An error has occured while deleting the token from the database.\n${err}`);
-                            req.body.persistedToDatabase = false;
+                            req.body.isPersistedToDatabase = false;
                             next();
                         });
                 };
@@ -186,7 +149,31 @@ const middleware = (function(){
                 next();
             }); 
     };
-    
+
+    async function tryToPersist(tokenObject){
+
+        const newToken = new Token({
+            apiName: tokenObject.apiName,
+            token: tokenObject.token,
+            timestamp: tokenObject.timestamp
+        });
+
+        let result;
+
+        newToken.save()
+            .then(token => {
+                console.log(`New token successfully stored to the database\n${token}`);
+                result = true;
+                return result;
+            })
+            .catch(err => {
+                console.log(`An error has occured while storing the token to the database.\n${err}`);
+                result = false;
+                return result;
+            });
+    };
+
+
     return {
        checkAuthenticated,
        checkLoggedIn,

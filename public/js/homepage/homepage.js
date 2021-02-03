@@ -11,6 +11,7 @@ const artistName = 'Red Hot Chilli Peppers';
 
 // Učitaj naslovnicu
 (async function loadHomepage(){
+    // Provjeri valjanost tokena
     const spotifyToken = await tokenChecker.checkSpotifyToken();
     // const youtubeToken = await tokenChecker.checkYoutubeToken();
 
