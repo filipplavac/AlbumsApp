@@ -1,6 +1,6 @@
 import Artist from './artist.js';
-import UI from './ui.js';
 import tokenChecker from './tokenChecker.js';
+import UI from './ui.js';
 
 // const artist = new Artist();
 const ui = new UI();

@@ -53,3 +53,7 @@ li {
     width: 100px;
     height: 100px;
 }
+
+.fa-star {
+    color: yellow;
+}

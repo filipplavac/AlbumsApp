@@ -1,17 +1,16 @@
 import tokenMachine from './tokenMachine.js';
 import {base64clientIdAndSecret, authenticationUrl} from './credentials.js';
 
-// Funkcija tokenChecker napravljena je prema revealing module pattern-u
 const tokenChecker = (function(){
 
     // Provjera access tokena za Spotify Web API
     async function checkSpotifyToken(){
         
         // tokenObject = {apiName, token, timestamp}
-        let tokenObject = await tokenMachine.getTokenObject('http://localhost:3000/checkspotifytoken');
+        let tokenObject = await tokenMachine.getTokenObject();
         
         if(!tokenObject) {
-            tokenObject = requestNewToken();
+            tokenObject = await requestNewToken();
             return tokenObject.token;
             
         } else {
@@ -22,7 +21,7 @@ const tokenChecker = (function(){
                 return tokenObject.token;
                 
             } else {
-                tokenObject = requestNewToken();
+                tokenObject = await requestNewToken();
                 return tokenObject.token;
             };
         };

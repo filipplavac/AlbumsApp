@@ -3,11 +3,12 @@ import tokenChecker from './tokenChecker.js';
 import UI from './ui.js';
 import events from './events.js';
 
-// Instanciraj user interface objekt
-const ui = new UI();
 
 // artistName odgovara imenu koje korisnik upiše u tražilicu
 const artistName = 'Red Hot Chilli Peppers';
+
+// Instanciraj ui
+const ui = new UI();
 
 // Učitaj naslovnicu
 (async function loadHomepage(){

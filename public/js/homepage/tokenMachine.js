@@ -2,7 +2,8 @@
 // Funkcija tokenMachine napravljena je prema revealing module pattern-u
 const tokenMachine = (function(){
 
-    async function getTokenObject(url){
+    async function getTokenObject(){
+        const url = 'http://localhost:3000/token';
         const tokenObject = await makeServerRequest(url);
         console.log('Spotify token fetched from database: ', tokenObject);
         return tokenObject;
@@ -38,7 +39,7 @@ const tokenMachine = (function(){
     };
 
     async function saveTokenObject(tokenObject){
-        const url = 'http://localhost:3000/checkspotifytoken';
+        const url = 'http://localhost:3000/token';
 
         const options = {
             method: 'POST',
@@ -60,14 +61,11 @@ const tokenMachine = (function(){
             const timestampInt = Number(timestampString);
             const diff = currentTime - timestampInt;
             
-            // Provjera je li token stariji od 50 minuta
-            if(diff >= 3000000){
-                console.log('Access token is invalid');
-                return false;
-            } else {
-                console.log('Access token is valid.')
-                return true;
-            };
+            const isValid = (diff >= 3000000) ? false : true;
+            const message = (isValid === true) ? 'Access token is valid' : 'Access token is invalid';
+            console.log(message);
+            
+            return isValid;
 
         } else {
             console.log('Recieved token timestamp is undefined.');

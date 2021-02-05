@@ -1,12 +1,11 @@
-class UI{
+class UI {
     constructor(){
         this.biographyParagraph = document.querySelector('.paragraph-biography');
         this.artistImage = document.querySelector('#image-artist');
         this.albumsList = document.querySelector('.ul-albums');
-        this.albumTracks = document.querySelector('.ul-album-tracks')
+        this.albumTracks = document.querySelector('.ul-album-tracks');
         this.artistName = document.querySelector('.paragraph-artist-name');
-
-    };
+    }
 
     renderArtist(artistInfo){
         const {albums, artist} = artistInfo;
@@ -39,14 +38,20 @@ class UI{
         };
 
         albumTracks.forEach(track => {
+            // const liModel = {name:'li' , attributes: [], properties: []};
+            // let li = makeElement(liModel);
+
             let li = document.createElement('li');
             li.className = 'li-track'
             li.id = `${track}`;
             li.textContent = track;
 
+            // let icon = document.createElement('i');
+            // icon.className = ''
+
             this.albumTracks.appendChild(li);
         });
     };
-};
+}
 
 export default UI;
