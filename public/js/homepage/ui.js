@@ -16,16 +16,21 @@ class UI {
 
         // Sliku od svakog albuma dodaj u albumsList
         albums.forEach(album => {
-            let li = document.createElement('li');
-            li.id = `li-${album.name}`;
+            const albumModel = {tagName: 'li', attributes: [{id:`li-${album.name}`}]}; 
+            const albumElement = makeElement(albumModel);
 
-            let image = document.createElement('img');
-            image.id = `${album.name}-${album.id}`;
-            image.className = 'img-album';
-            image.src = album.image.url;
+            const albumImageModel = {tagName: 'img', attributes: [{class: 'img-album'}, {id: `${album.name}-${album.id}`}, {src: album.image.url}]};
+            const albumImage = makeElement(albumImageModel);
+            // let li = document.createElement('li');
+            // li.id = `li-${album.name}`;
 
-            li.appendChild(image);
-            this.albumsList.appendChild(li);
+            // let image = document.createElement('img');
+            // image.id = `${album.name}-${album.id}`;
+            // image.className = 'img-album';
+            // image.src = album.image.url;
+
+            albumElement.appendChild(albumImage);
+            this.albumsList.appendChild(albumElement);
         }) ;
     };
 
@@ -38,20 +43,30 @@ class UI {
         };
 
         albumTracks.forEach(track => {
-            // const liModel = {name:'li' , attributes: [], properties: []};
-            // let li = makeElement(liModel);
+            const albumTrackModel = {tagName: 'li' , attributes: [{class: 'li-track'}, {id: track}], properties: {textContent: track}};
+            const albumTrack = makeElement(albumTrackModel);
 
-            let li = document.createElement('li');
-            li.className = 'li-track'
-            li.id = `${track}`;
-            li.textContent = track;
+            const iconModel = {tagName: 'i', attributes: [{class: 'fa fa-star'}]};
+            const icon = makeElement(iconModel);
 
-            // let icon = document.createElement('i');
-            // icon.className = ''
-
-            this.albumTracks.appendChild(li);
+            albumTrack.appendChild(icon);
+            this.albumTracks.appendChild(albumTrack);
         });
     };
+};
+
+function makeElement(model){
+    let newElement = document.createElement(model.tagName);
+
+    // Dinamičko postavljane atributa za stvoreni element
+    model.attributes.forEach(attribute => {
+        const [attrName, attrValue] = [Object.keys(attribute), Object.values(attribute)];
+        newElement.setAttribute(attrName, attrValue);
+    });
+
+    newElement.textContent = (model.properties && model.properties.textContent) ? model.properties.textContent : '';
+    
+    return newElement;
 }
 
 export default UI;
