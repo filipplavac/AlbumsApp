@@ -2,7 +2,14 @@ import Artist from './artist.js';
 import tokenChecker from './tokenChecker.js';
 import UI from './ui.js';
 import events from './events.js';
+import customHttp from './../customHttp.js';
 
+// Učitaj event listenere
+window.addEventListener("DOMContentLoaded", () => {
+    document.querySelector('.ul-albums').addEventListener('click', events.renderAlbumNameAndTracks);
+    document.querySelector('.ul-album-tracks').addEventListener('click', events.addToFavourites);
+    document.querySelector('.ul-user-favourites').addEventListener('click', events.removeFromFavourites);
+});
 
 // artistName odgovara imenu koje korisnik upiše u tražilicu
 const artistName = 'Red Hot Chilli Peppers';
@@ -12,6 +19,7 @@ const ui = new UI();
 
 // Učitaj naslovnicu
 (async function loadHomepage(){
+     
     // Provjeri valjanost tokena
     const spotifyToken = await tokenChecker.checkSpotifyToken();
     // const youtubeToken = await tokenChecker.checkYoutubeToken();
@@ -26,10 +34,11 @@ const ui = new UI();
     // Renderiraj informacije o artistu na homepageu
     ui.renderArtist(artistInfo);
 
-    // Postavi event listener na listu albuma
-    let albumList = document.querySelector('.ul-albums');
-    albumList.addEventListener('click', events.renderTracks);
-
+    // Dohvati korisnikove favorite
+    const userFavourites = await customHttp.getUserFavourites();
+    userFavourites.forEach(favourite => {
+        ui.addToFavourites(favourite);
+    })
 })();
 
 

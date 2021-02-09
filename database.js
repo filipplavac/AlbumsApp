@@ -21,7 +21,8 @@ const options =  {
 const UserSchema = new mongoose.Schema({
     username: String,
     hash: String,
-    salt: String
+    salt: String,
+    favourites: Array
 });
 
 // Struktura Token dokumenta

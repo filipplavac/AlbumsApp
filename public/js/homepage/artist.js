@@ -1,4 +1,3 @@
-
 class Artist {
     constructor(artist, accessToken){
         
@@ -64,7 +63,10 @@ class Artist {
             console.log(albumObject);
             
             const albumTracks = albumObject.albums[0].tracks.items.map(track => {
-                return track.name;
+                return {
+                    trackName: track.name,
+                    spotifyId: track.id
+                };
             });
 
             return albumTracks;

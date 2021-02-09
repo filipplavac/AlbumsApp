@@ -1,10 +1,11 @@
+import customHttp from '../customHttp.js';
 
 // Funkcija tokenMachine napravljena je prema revealing module pattern-u
 const tokenMachine = (function(){
 
     async function getTokenObject(){
         const url = 'http://localhost:3000/token';
-        const tokenObject = await makeServerRequest(url);
+        const tokenObject = await customHttp.sendRequest(url);
         console.log('Spotify token fetched from database: ', tokenObject);
         return tokenObject;
 
@@ -23,7 +24,7 @@ const tokenMachine = (function(){
 
         const options = {method: 'post', headers: headers, body: body};
 
-        const spotifyResponse = await makeServerRequest(authenticationUrl, options);
+        const spotifyResponse = await customHttp.sendRequest(authenticationUrl, options);
 
         const [apiName, token, timestamp] = ['Spotify', spotifyResponse.access_token, Date.now().toString()]; 
 
@@ -49,7 +50,7 @@ const tokenMachine = (function(){
             body: JSON.stringify({tokenObject: tokenObject})
         };
         
-        const status = await makeServerRequest(url, options);
+        const status = await customHttp.sendRequest(url, options);
 
         return status;
     };
@@ -72,18 +73,18 @@ const tokenMachine = (function(){
         };
     };
 
-    async function makeServerRequest(url, requestOptions){
-        const options = requestOptions || {};
-        try {
-            const response = await fetch(url, options);
-            const jsonResponse = await response.json();
-            return jsonResponse;
+    // async function http.sendRequest(url, requestOptions){
+    //     const options = requestOptions || {};
+    //     try {
+    //         const response = await fetch(url, options);
+    //         const jsonResponse = await response.json();
+    //         return jsonResponse;
             
-        } catch(err){
-            console.error(err);
-        }
+    //     } catch(err){
+    //         console.error(err);
+    //     }
 
-    };
+    // };
 
     return {
         getTokenObject,

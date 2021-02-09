@@ -130,8 +130,9 @@ const middleware = (function(){
 
                 } else {
                     // Izbriši nađeni token iz baze podataka
-                    Token.deleteOne(req.body.tokenObject)
+                    Token.deleteOne({apiName: 'Spotify'})
                         .then(response => {
+                            console.log(response);
                             console.log(`Expired token successfully deleted from database`);
                             const result = tryToPersist(req.body.tokenObject);
                             req.body.isPersistedToDatabase = result;
@@ -173,6 +174,59 @@ const middleware = (function(){
             });
     };
 
+    async function updateFavouritesInDatabase(req, res, next){
+        const username = req.user.username;
+        const action = req.body.query.action;
+
+        if(action === 'push'){
+        const favourite = req.body.query.trackData;
+            User.updateOne({username: username}, {$push: {favourites: favourite}})
+                .then(() => {
+                    console.log('Favourite successfully pushed to the database.');
+                    req.favouriteUpdated = true;
+                    next();
+                })
+                .catch(err => {
+                    console.log(err);
+                    req.favouriteUpdated = false;
+                    next();
+                });
+                
+        } else if (action === 'pull'){
+            const trackId = req.body.query.trackId;
+            User.updateOne({username: username}, {$pull: {favourites: {trackId: trackId}}})
+                .then(() => {
+                    console.log('Favourite successfully pulled from the database.');
+                    req.favouriteUpdated = true;
+                    next();
+                })
+                .catch(err => {
+                    console.log(err);
+                    req.favouriteUpdated = false;
+                    next();
+                });
+
+        } else {
+            console.log('Invalid action specified.');
+            req.favouriteUpdated = false;
+            next();
+        };
+
+    };
+    
+    async function getUserFavourites(req, res, next){
+        const username = req.user.username;
+        User.findOne({username: username})
+            .then(user => {
+                console.log(`User's favourites successfully retrieved from the database: \n${user.favourites}`);
+                req.body.userFavourites = user.favourites;
+                next();
+            })
+            .catch(err => {
+                console.log(`An error has occurred while trying to retrieve user's favourites from the database.\n${err}`);
+                next();
+            });
+    };
 
     return {
        checkAuthenticated,
@@ -181,7 +235,9 @@ const middleware = (function(){
        checkRegistration,
        saveUserToDatabase,
        findTokenInDatabase,
-       persistTokenToDatabase
+       persistTokenToDatabase,
+       updateFavouritesInDatabase,
+       getUserFavourites
     };
 })();
 

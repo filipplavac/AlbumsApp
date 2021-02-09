@@ -22,6 +22,11 @@ router.get('/token', middleware.findTokenInDatabase, (req, res) => {
     res.send(JSON.stringify(tokenObject));
 });
 
+router.get('/favourites', middleware.getUserFavourites, (req, res) => {
+    const userFavourites = req.body.userFavourites;
+    res.send(JSON.stringify(userFavourites));
+});
+
 router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
@@ -46,6 +51,10 @@ router.post('/token', middleware.persistTokenToDatabase, (req, res) => {
     } else {
         res.send({isPersistedToDatabase: false});
     }
+});
+
+router.post('/favourites', middleware.updateFavouritesInDatabase, (req, res) => {
+    res.send({isUpdated: req.favouriteUpdated});
 });
 
 export default router;
