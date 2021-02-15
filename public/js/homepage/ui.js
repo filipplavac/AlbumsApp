@@ -65,9 +65,17 @@ class UI {
         const favouriteModel = {
             tagName: 'li', 
             attributes: [{id: trackId}, {class: 'li-favourite'}], 
-            properties: {textContent: `${artistName}:${albumName}: ${trackName}`}
         };
         const favourite = makeElement(favouriteModel);
+
+        const favouriteInfoModel = {
+            tagName: 'p',
+            attributes: [{id: `favourite-info-${trackId}`}, {class: `p-favourite-info`}],
+            properties: {
+                innerHTML: `${artistName}: ${trackName}<br>Album: ${albumName}`
+            }
+        };
+        const favouriteInfo = makeElement(favouriteInfoModel);
 
         const deleteIconModel = {
             tagName: 'i', 
@@ -75,6 +83,14 @@ class UI {
         };
         const deleteIcon = makeElement(deleteIconModel);
 
+        const playIconModel = {
+            tagName: 'i',
+            attributes: [{id: `play-${trackId}`}, {class: 'fas fa-play'}]
+        };
+        const playIcon = makeElement(playIconModel);
+
+        favourite.appendChild(favouriteInfo);
+        favourite.appendChild(playIcon);
         favourite.appendChild(deleteIcon);
         this.userFavourites.appendChild(favourite);
     };
@@ -95,6 +111,10 @@ function makeElement(model){
     });
 
     newElement.textContent = (model.properties && model.properties.textContent) ? model.properties.textContent : '';
+    // Ovo je glupo rješenje
+    if(newElement.textContent === ''){
+        newElement.innerHTML = (model.properties && model.properties.innerHTML) ? model.properties.innerHTML : '';
+    };
     
     return newElement;
 }

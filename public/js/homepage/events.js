@@ -68,6 +68,7 @@ const events = (function(){
 
     async function removeFromFavourites(e){
         if(e.target.classList.contains('fa-times')){
+            console.log(e.target);
             const favourite = e.target.parentElement;
 
             const query = {
@@ -83,10 +84,30 @@ const events = (function(){
         };
     };
 
+    function playFavourite(e){
+        if(e.target.classList.contains('fa-play')){
+
+            /* Provjeri postoji li u bazi podataka <iframe> src za odabrani
+            favorit kako bi se minmizirala količina zahtjeva na youtubeApi */
+            const iframeSrc = customHttp.getIframeSrc(); 
+            if(true){
+
+            };
+
+            // Izvuci ime umjetnika i pjesme pogodno za Youtube pretraživanje
+            const favouriteTextContent = e.target.previousSibling.textContent;
+            const regEx = /.*(?=Album:)/;
+            const query = favouriteTextContent.match(regEx).toString();
+            const refactoredQuery = query.replace(':','').toLowerCase() + ' audio';
+            console.log(refactoredQuery);
+        }
+    };
+
     return{
         renderAlbumNameAndTracks,
         addToFavourites,
-        removeFromFavourites
+        removeFromFavourites,
+        playFavourite
     };
 
 })();

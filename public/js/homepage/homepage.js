@@ -9,10 +9,11 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelector('.ul-albums').addEventListener('click', events.renderAlbumNameAndTracks);
     document.querySelector('.ul-album-tracks').addEventListener('click', events.addToFavourites);
     document.querySelector('.ul-user-favourites').addEventListener('click', events.removeFromFavourites);
+    document.querySelector('.ul-user-favourites').addEventListener('click', events.playFavourite);
 });
 
 // artistName odgovara imenu koje korisnik upiše u tražilicu
-const artistName = 'Red Hot Chilli Peppers';
+const artistName = 'Creedence Clearwater Revival';
 
 // Instanciraj ui
 const ui = new UI();

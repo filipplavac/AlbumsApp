@@ -37,10 +37,15 @@ const customHttp = (function(){
         return serverResponse;
     };
 
+    async function getIframeSrc(){
+
+    };
+
     return {
         sendRequest,
         updateUserFavourites,
-        getUserFavourites
+        getUserFavourites,
+        getIframeSrc
     };
 })();
 

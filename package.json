@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node app",
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "test": "mocha || true"
   },
   "author": "Filip Plavac",
   "license": "ISC",
@@ -26,7 +27,9 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "chai": "^4.3.0",
     "dotenv": "^8.2.0",
+    "mocha": "^8.3.0",
     "nodemon": "^2.0.6"
   }
 }
