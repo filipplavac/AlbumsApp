@@ -2,6 +2,8 @@ import Artist from './artist.js';
 import tokenChecker from './tokenChecker.js';
 import UI from './ui.js';
 import customHttp from '../customHttp.js';
+import youTubeApi from './youTubeApi.js';
+// import player from './iframeApi.js';
 
 // const artist = new Artist();
 const ui = new UI();
@@ -38,27 +40,40 @@ const events = (function(){
 
             // Provjeri je li pjesma već sadržana u favoritima  
             const favourites = Array.from(document.querySelectorAll('.li-favourite'));
-            const isFavourite = favourites.some(favourite => favourite.id === trackId);
+            const favouriteIds = favourites.map(favourite => {
+                const IdRegEx = /(?<=-)[\w]*/,
+                      favouriteId = favourite.id.match(IdRegEx).toString();
 
+                return favouriteId;
+            });
+            const isFavourite = favouriteIds.some(favouriteId => favouriteId === trackId);
+
+            // Dodaj u favorite samo ako pjesma već nije favorit
             if(!isFavourite){
-                const trackName = e.target.parentElement.textContent;
-                const albumName = document.querySelector('.selected-album').textContent;
-                const artistName = document.querySelector('.paragraph-artist-name').textContent;
+                const trackName = e.target.parentElement.textContent,
+                      albumName = document.querySelector('.selected-album').textContent,
+                      artistName = document.querySelector('.paragraph-artist-name').textContent;
+
+                /* Od YouTube api-ja pribavljamo videoId od dodanog favorita kako bi se na eventualni
+                zahtjev korisnika favorit počeo reproducirati unutar embeddanog <iframe> elementa */
+                const youTubeQuery = `${artistName} ${trackName} audio`.toLowerCase(),
+                      videoId = await youTubeApi.getVideoId(youTubeQuery);
 
                 const trackData = {
                     trackName,
                     trackId,
                     albumName,
-                    artistName
+                    artistName,
+                    videoId
                 };
 
-                const query = {
+                const databaseQuery = {
                     trackData,
                     action: 'push'
                 };
 
                 // Pošalji serveru zahtjev za spremanje favorita u bazu podataka
-                const isUpdated = await customHttp.updateUserFavourites(query);
+                const isUpdated = await customHttp.updateUserFavourites(databaseQuery);
                 if(isUpdated){
                     ui.addToFavourites(trackData);
                 };
@@ -69,16 +84,19 @@ const events = (function(){
     async function removeFromFavourites(e){
         if(e.target.classList.contains('fa-times')){
             console.log(e.target);
-            const favourite = e.target.parentElement;
+
+            const regEx = /(?<=-)\w*/;
+            const favouriteId = e.target.id.match(regEx).toString();    
 
             const query = {
-                trackId: favourite.id,
+                trackId: favouriteId,
                 action: 'pull'
             };
             
             // Pošalji serveru zahtjev za brisanje favorita iz baze podataka
             const isUpdated = await customHttp.updateUserFavourites(query);
             if(isUpdated){
+                const favourite = e.target.parentElement;
                 ui.removeFromFavourites(favourite);
             };
         };
@@ -87,27 +105,36 @@ const events = (function(){
     function playFavourite(e){
         if(e.target.classList.contains('fa-play')){
 
-            /* Provjeri postoji li u bazi podataka <iframe> src za odabrani
-            favorit kako bi se minmizirala količina zahtjeva na youtubeApi */
-            const iframeSrc = customHttp.getIframeSrc(); 
-            if(true){
-
-            };
-
-            // Izvuci ime umjetnika i pjesme pogodno za Youtube pretraživanje
-            const favouriteTextContent = e.target.previousSibling.textContent;
-            const regEx = /.*(?=Album:)/;
-            const query = favouriteTextContent.match(regEx).toString();
-            const refactoredQuery = query.replace(':','').toLowerCase() + ' audio';
-            console.log(refactoredQuery);
+            // Izvuci videoId kliknutog favorita
+            const targetId = e.target.id,
+                  videoIdRegEx = /(?<=-\w*-)\w*/,
+                  videoId = targetId.match(videoIdRegEx).toString();
+            
+            // Dohvati <iframe> element i podesi ga
+            const ytPlayer = document.getElementById('yt-player')
+            ytPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            
+            console.log('Play button clicked');
         }
+    };
+
+    function playerControl(e){
+        if(e.target.classList.contains('fa-pause')){
+            console.log('Pause button clicked');
+            this.pauseVideo();
+        };
+
+        // if(e.target.classList.contains('fa-play')){
+
+        // };
     };
 
     return{
         renderAlbumNameAndTracks,
         addToFavourites,
         removeFromFavourites,
-        playFavourite
+        playFavourite,
+        playerControl
     };
 
 })();

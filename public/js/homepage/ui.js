@@ -60,11 +60,11 @@ class UI {
     };
 
     addToFavourites(trackData){
-        const {trackName, trackId, albumName, artistName} = trackData;
+        const {trackName, trackId, albumName, artistName, videoId} = trackData;
 
         const favouriteModel = {
             tagName: 'li', 
-            attributes: [{id: trackId}, {class: 'li-favourite'}], 
+            attributes: [{id: `favourite-${trackId}`}, {class: 'li-favourite'}], 
         };
         const favourite = makeElement(favouriteModel);
 
@@ -85,12 +85,19 @@ class UI {
 
         const playIconModel = {
             tagName: 'i',
-            attributes: [{id: `play-${trackId}`}, {class: 'fas fa-play'}]
+            attributes: [{id: `play-${trackId}-${videoId}`}, {class: 'fas fa-play'}]
         };
         const playIcon = makeElement(playIconModel);
 
+        const pauseIconModel = {
+            tagName: 'i',
+            attributes: [{id: `pause-${trackId}-${videoId}`}, {class: `fas fa-pause`}]
+        };
+        const pauseIcon = makeElement(pauseIconModel);
+
         favourite.appendChild(favouriteInfo);
         favourite.appendChild(playIcon);
+        favourite.appendChild(pauseIcon);
         favourite.appendChild(deleteIcon);
         this.userFavourites.appendChild(favourite);
     };
