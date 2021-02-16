@@ -27,42 +27,16 @@
     <div class="container container-user">
         <p class="paragraph-favourites">User favourites</p>
         <ul class="ul-user-favourites"></ul>
-        <iframe src="https://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1" id="yt-player" width="560" height="315" allow="autoplay" enablejsapi="true"></iframe>
+        <iframe src="https://www.youtube.com/embed?enablejsapi=1" id="yt-player" width="560" height="315" allow="autoplay"></iframe>
     </div>
 
 </div>
 
-<a href="/logout">Log Out</a>.
+<a href="/logout">Log Out</a>
 
-<script>
-    // Ubacivanje skripte koja učitava Iframe API iznad svih skripti unutar hompage.ejs
-let scriptTag = document.createElement('script');
-scriptTag.id = 'iframe-demo';
-scriptTag.src = 'https://www.youtube.com/iframe_api';
-let firstScriptTag = document.body.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
-console.log('Source script inserted');
-
-/* Funckiju onYouTubeIframeAPIReady() poziva #iframe-demo skripta nakon što završi
-sa skidanjem Javascript koda za Iframe API */
-let player;
-    function onYouTubeIframeAPIReady(){
-        console.log('Iframe API ready!');
-        player = new YT.Player('yt-player', {
-            events: {
-                'onReady': onPlayerReady
-                // 'onStateChange': onPlayerStateChange
-            }
-        });
-    };
-
-    function onPlayerReady(event) {
-        console.log('Player ready!');
-        // let favouriteList = document.querySelector('.ul-user-favourites');
-        // favouriteList.addEventListener('click', events.playerControl.bind(player));
-    };
-</script>
-
+<script src="https://www.youtube.com/iframe_api" id="iframeApi-download"></script>
+<script src="iframeApi.js" type="text/javascript"></script>
+<script src="homepage.js" type="module"></script>
 
 
 

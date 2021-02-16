@@ -102,39 +102,10 @@ const events = (function(){
         };
     };
 
-    function playFavourite(e){
-        if(e.target.classList.contains('fa-play')){
-
-            // Izvuci videoId kliknutog favorita
-            const targetId = e.target.id,
-                  videoIdRegEx = /(?<=-\w*-)\w*/,
-                  videoId = targetId.match(videoIdRegEx).toString();
-            
-            // Dohvati <iframe> element i podesi ga
-            const ytPlayer = document.getElementById('yt-player')
-            ytPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            
-            console.log('Play button clicked');
-        }
-    };
-
-    function playerControl(e){
-        if(e.target.classList.contains('fa-pause')){
-            console.log('Pause button clicked');
-            this.pauseVideo();
-        };
-
-        // if(e.target.classList.contains('fa-play')){
-
-        // };
-    };
-
     return{
         renderAlbumNameAndTracks,
         addToFavourites,
         removeFromFavourites,
-        playFavourite,
-        playerControl
     };
 
 })();

@@ -1,16 +1,5 @@
-import events from './events.js';
-
-// Ubacivanje skripte koja učitava Iframe API iznad svih skripti unutar hompage.ejs
-let scriptTag = document.createElement('script');
-scriptTag.id = 'iframe-demo';
-scriptTag.src = 'https://www.youtube.com/iframe_api';
-let firstScriptTag = document.body.getElementsByTagName('script')[0];
-console.log(firstScriptTag);
-firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
-console.log('Source script inserted');
-
-/* Funckiju onYouTubeIframeAPIReady() poziva #iframe-demo skripta nakon što završi
-sa skidanjem Javascript koda za Iframe API */
+/* Funckiju onYouTubeIframeAPIReady() poziva #iframeApi-download skripta definirana unutar
+homepage.ejs nakon što završi sa skidanjem Javascript koda za Iframe API */
 let player;
 function onYouTubeIframeAPIReady(){
     console.log('Iframe API ready!');
@@ -24,20 +13,46 @@ function onYouTubeIframeAPIReady(){
 
 function onPlayerReady(event) {
     console.log('Player ready!');
-    // let favouriteList = document.querySelector('.ul-user-favourites');
-    // favouriteList.addEventListener('click', events.playerControl.bind(player));
+    let favouriteList = document.querySelector('.ul-user-favourites');
+    favouriteList.addEventListener('click', playerControls);
 };
 
+function playerControls(e){
+    const targetClassName = e.target.className;
+    if(targetClassName === 'fas fa-pause'|| targetClassName === 'fas fa-play'){
+        // Izvuci videoId iz id atribute favorita čiji je pause gumb kliknut
+        const targetId = e.target.id,
+              targetVideoIdRegEx = /(?<=-\w*-)\w*/,
+              targetVideoId = targetId.match(targetVideoIdRegEx).toString();
 
+        // Izvuci videoId pjesme koja se trenutno izvodi u <iframe> elementu iz njegove src atribute
+        const iframe = document.getElementById('yt-player'),
+              iframeSource = iframe.src,
+              iframeCurrentVideoIdRegEx = /(?<=embed\/)\w*(?=\?)/;
+        /* Kako #yt-player pri učitavanju stranice nema unutar src atribute string znakova koji odgovara
+        iframeCurrentVideoIdRegEx-u potrebno je kod reprodukcije prve pjesme njezin iframeCurrentVideoId
+        ručno podesiti na "null" jer će u suprotnome .toString() metoda baciti error*/
+        const iframeCurrentVideoId = iframeSource.match(iframeCurrentVideoIdRegEx) ? iframeSource.match(iframeCurrentVideoIdRegEx).toString() : null;
 
+        switch (targetClassName){
+            case 'fas fa-play':
+                if(targetVideoId === iframeCurrentVideoId){
+                    // Nastavi reprodukciju
+                    player.playVideo();
+                } else {
+                    // Učitaj novi video
+                    iframe.src = `https://www.youtube.com/embed/${targetVideoId}?autoplay=1&enablejsapi=1`;
+                }
+                break;
 
-// function playVideo(){
-//     player.playVideo();
-// };
-
-// function pauseVideo(){
-//     player.pauseVideo();
-// }
+            case 'fas fa-pause':
+                if(targetVideoId === iframeCurrentVideoId){
+                    player.pauseVideo();
+                }
+                break;
+        };
+    };
+};
 
 // function changeBorderColor(playerStatus) {
 //     var color;
@@ -61,5 +76,3 @@ function onPlayerReady(event) {
 // function onPlayerStateChange(event) {
 //     changeBorderColor(event.data);
 // }
-
-// export {pauseVideo};

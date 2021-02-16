@@ -5,15 +5,15 @@ import middleware from './middleware.js'
 const router  = express.Router();
 
 router.get('/', middleware.checkAuthenticated, (req, res) =>{
-    res.render('homepage', {user: req.user, stylesheet: "homepage.css", scripts: ["iframeApi.js","homepage.js"]});
+    res.render('homepage', {user: req.user, stylesheet: "homepage.css"});
 })
 
 router.get('/login', middleware.checkLoggedIn, (req, res) => {
-    res.render('login', {stylesheet: 'login.css', scripts: ["login.js", "messageHandler.js"]});
+    res.render('login', {stylesheet: 'login.css'});
 })
 
 router.get('/register', (req, res) => {
-    res.render('register', {stylesheet: 'register.css', scripts: ["register.js", "messageHandler.js"]});
+    res.render('register', {stylesheet: 'register.css'});
 })
 
 router.get('/token', middleware.findTokenInDatabase, (req, res) => {

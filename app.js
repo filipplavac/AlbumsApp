@@ -34,21 +34,6 @@ app.set('views', [__dirname + '/views']);
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
-/* Helper funkcija za dinamičko renderiranje <script></script> tagova u layout.ejs */
-app.locals.renderScriptTags = function(scripts){
-        if(scripts != undefined){
-            let scriptTags = scripts.map(script => {
-                return `<script src="${script}" type="module"></script>`;
-                
-            }).join('\n'); 
-    
-            return scriptTags;
-
-        } else {
-            return '';
-        }
-    };
-
 // Body parsing i session middleware
 app.use(express.json());
 app.use(express.urlencoded({
