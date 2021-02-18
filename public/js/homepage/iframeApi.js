@@ -4,8 +4,11 @@ let player;
 function onYouTubeIframeAPIReady(){
     console.log('Iframe API ready!');
     player = new YT.Player('yt-player', {
+        playerVars: {
+            'modestbranding': 1,
+        },
         events: {
-            'onReady': onPlayerReady
+            'onReady': onPlayerReady,
             // 'onStateChange': onPlayerStateChange
         }
     });
@@ -17,42 +20,120 @@ function onPlayerReady(event) {
     favouriteList.addEventListener('click', playerControls);
 };
 
+// Nije uračunata moguće micanje/dodavanje favorita što utječe na playlistu
 function playerControls(e){
+  
     const targetClassName = e.target.className;
     if(targetClassName === 'fas fa-pause'|| targetClassName === 'fas fa-play'){
-        // Izvuci videoId iz id atribute favorita čiji je pause gumb kliknut
+        // Izvuci videoId pjesme čiji je play/pause gumb kliknut
         const targetId = e.target.id,
-              targetVideoIdRegEx = /(?<=-\w*-)\w*/,
-              targetVideoId = targetId.match(targetVideoIdRegEx).toString();
+        targetVideoIdRegEx = /(?<=-\w*-)\w*/,
+        targetVideoId = targetId.match(targetVideoIdRegEx).toString();
 
-        // Izvuci videoId pjesme koja se trenutno izvodi u <iframe> elementu iz njegove src atribute
-        const iframe = document.getElementById('yt-player'),
-              iframeSource = iframe.src,
-              iframeCurrentVideoIdRegEx = /(?<=embed\/)\w*(?=\?)/;
-        /* Kako #yt-player pri učitavanju stranice nema unutar src atribute string znakova koji odgovara
-        iframeCurrentVideoIdRegEx-u potrebno je kod reprodukcije prve pjesme njezin iframeCurrentVideoId
-        ručno podesiti na "null" jer će u suprotnome .toString() metoda baciti error*/
-        const iframeCurrentVideoId = iframeSource.match(iframeCurrentVideoIdRegEx) ? iframeSource.match(iframeCurrentVideoIdRegEx).toString() : null;
+        // Izvadi videoId svakog favorita 
+        const favourites = Array.from(document.querySelectorAll('.li-favourite'));
+        const videoIds = favourites.map(favourite => {
+            const favouriteVideoIdRegEx = /(?<=-\w*-)\w*/,
+                favouriteVideoId = favourite.id.match(favouriteVideoIdRegEx).toString();
+            return favouriteVideoId;  
+        });
 
+        // Izvadi index kliknutog favorita - od njega započinje reprodukcija playliste
+        const targetIndex = videoIds.indexOf(targetVideoId);
+        console.log(targetIndex);
+
+        // Trenutno stanje player objekta
+        const playerState = player.getPlayerState();
+        console.log(playerState);
+
+        // Je li stisnut play ili pause gumb
         switch (targetClassName){
             case 'fas fa-play':
-                if(targetVideoId === iframeCurrentVideoId){
-                    // Nastavi reprodukciju
-                    player.playVideo();
+                // -1 = niti jedan video nije u playlisti
+                if(player.getPlaylistIndex() === -1){
+                    // Učitaj playlistu i podesi reproduciranje u petlji
+                    player.loadPlaylist(videoIds, targetIndex);
+                    player.setLoop(true);
+        
                 } else {
-                    // Učitaj novi video
-                    iframe.src = `https://www.youtube.com/embed/${targetVideoId}?autoplay=1&enablejsapi=1`;
-                }
+                    const currentlyPlayingVideoIndex = player.getPlaylistIndex();
+                    const currentlyPlayingVideoId = videoIds[currentlyPlayingVideoIndex];
+                    /* Ako videoId kliknutog play gumba odgovara videoId-ju pjesme koja je trenutno 
+                    učitana u player, te ako je video pauziran, onda play gumb nastavlja reprodukciju */
+                    if(targetVideoId === currentlyPlayingVideoId && playerState === 2){
+                        player.playVideo();
+                    }; 
+                    // Ako je klikut play gumb od neke druge pjesme onda player kreće reproducirati istu
+                    if(targetVideoId !== currentlyPlayingVideoId){
+                        player.playVideoAt(targetIndex);
+                    };
+                };
                 break;
 
             case 'fas fa-pause':
-                if(targetVideoId === iframeCurrentVideoId){
+                const currentlyPlayingVideoIndex = player.getPlaylistIndex();
+                const currentlyPlayingVideoId = videoIds[currentlyPlayingVideoIndex];
+                if(playerState === 1 && targetVideoId === currentlyPlayingVideoId){
                     player.pauseVideo();
-                }
+                };
                 break;
         };
     };
 };
+
+
+// class Playlist {
+//     constructor(){
+//         this.members = document.querySelectorAll('.li-favourite');
+//     };
+
+//     updateMembers(){
+//         this.members = document.querySelectorAll('.li-favourite');
+//     };
+
+//     getMemberVideoIds(){
+//         const members = Array.from(this.members);
+//         const memberVideoIds = members.map(member => {
+//             const memberVideoIdRegEx = /(?<=-\w*-)\w*/,
+//                 memberVideoId = member.id.match(memberVideoIdRegEx).toString();
+//             return memberVideoId;  
+//         });
+
+//         return memberVideoIds;
+//     };
+
+// };
+
+// class PlayerControls {
+
+// };
+
+// function onPlayerStateChange(){
+
+//     // Izvadi videoId svakog favorita 
+//     const favourites = Array.from(document.querySelectorAll('.li-favourite'));
+//     const videoIds = favourites.map(favourite => {
+//         const favouriteVideoIdRegEx = /(?<=-\w*-)\w*/,
+//             favouriteVideoId = favourite.id.match(favouriteVideoIdRegEx).toString();
+//         return favouriteVideoId;  
+//     });
+
+    // Provjeravaj je li favorit dodan ili maknut s playliste te postupi adekvatno
+
+    /* Ovo se mora provjeravati i unutar playerControls() u slučaju da favorit bude 
+    dodan prije nego se stanje playera promjenilo */
+    
+// }
+
+// const playerInterface = (function(){
+//     function processRequest(){
+
+//     }
+    
+//     return {
+//         processRequest
+//     };
+// })();
 
 // function changeBorderColor(playerStatus) {
 //     var color;

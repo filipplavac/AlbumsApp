@@ -64,7 +64,7 @@ class UI {
 
         const favouriteModel = {
             tagName: 'li', 
-            attributes: [{id: `favourite-${trackId}`}, {class: 'li-favourite'}], 
+            attributes: [{id: `favourite-${trackId}-${videoId}`}, {class: 'li-favourite'}], 
         };
         const favourite = makeElement(favouriteModel);
 
